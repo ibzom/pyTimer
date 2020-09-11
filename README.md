@@ -1,0 +1,2 @@
+# pyTimer
+Python Timer class
