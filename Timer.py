@@ -1,13 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Sep 11 11:49:11 2020
-@author: MichaelVine
-"""
-
 import time
 import pandas as pd
 from uuid import uuid4
-
+import os
 
 # %% Timer Class for Execution Time
 
@@ -17,9 +11,15 @@ class Timer():
     end_time = None
     time_storage = []
     timer_count = 0
+    output_directory = None
     
     def __init__(self):
         pass
+    
+    
+    @classmethod
+    def add_output_directory(cls, dir_path):
+        cls.output_directory = dir_path
     
     @classmethod
     def start_timer(cls):
@@ -51,7 +51,10 @@ class Timer():
         
     @classmethod
     def export_time_log(cls):
-        pd.DataFrame().from_dict(cls.time_storage).to_csv('C:/FlatFiles/LogFiles/' + str(uuid4()) + '.log', index = False)
+        if cls.output_directory == None:
+            os.makedirs(os.path.join(os.getcwd(), 'LogFiles/'), exist_ok=True)
+            cls.output_directory = os.path.join(os.getcwd(), 'LogFiles/')
+        pd.DataFrame().from_dict(cls.time_storage).to_csv(cls.output_directory + str(uuid4()) + '.log', index = False)
         
 
 # %% Testing Timer Class - Uncomment to see the results
@@ -59,14 +62,14 @@ class Timer():
 # x = Timer()
 
 # x.start_timer()
-# time.sleep(20)
+# time.sleep(2)
 # x.end_timer()
 
 # x.display_time('Test')
 # print(x.time_storage)
 
 # x.start_timer()
-# time.sleep(10)
+# time.sleep(1)
 # x.end_timer()
 # x.display_time('Test_2')
 # print(x.time_storage)
